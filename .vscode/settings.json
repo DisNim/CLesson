@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "malloc.h": "c",
+        "typeinfo": "c",
+        "locale.h": "c"
+    }
+}

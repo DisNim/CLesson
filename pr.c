@@ -44,7 +44,7 @@ void main()
 	printf("Введите второе число: ");
 	scanf("%lf", &b);
 	double(*calc[4])(double, double) = {sum, multiply, divide, substract};
-	printf("Рузультат:\n");
+	printf("Результат:\n");
 	for (int i = 0; i < 4; i++)
 	{
 
@@ -169,12 +169,13 @@ int findMaxInDArray(int** arr, int row, int col)
 
 void pr2(int size)
 {
-	int* arr = createArray(size);
+	int* (*cArray)(int) = createArray;
+	int* arr = cArray(size);
 	int (*fMax)(int*, int) = findMax;
 	int (*cMax)(int*, int, int) = countMaxs;
 	int max = fMax(arr, size);
 	int count = cMax(arr, size, max);
-	printf("\nМаксимум: %d\nВстречается: %d", max, count);
+	printf("Максимальное значение: %d\n: Количество: %d\n", max, count);
 	free(arr);
 }
 

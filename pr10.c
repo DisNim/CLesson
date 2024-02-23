@@ -1,96 +1,81 @@
-//16. ;
 #include <stdio.h>
-#include <locale.h>
-#include <string.h>
 #include <malloc.h>
+#include <locale.h>
 
 
-struct Node
+struct Student
 {
-	char name[20];
-	char surname[20];
-	char gender[1];
+	char* name;
+	char* surname;
+	char* gender;
+	char* group;
 	int age;
-	char group[7];
-	int mark_math;
-	int mark_physics;
-	int mark_chemistry;
-	struct Node* next;
+	int asses_chemistry;
+	int asses_math;
+	int asses_phisic;
+	struct Student* next;
 };
 
-struct Student 
+struct Student* st_stud_init(char* name, char* surname, char* gender, char* group, int age, int asses_chemistry,
+int asses_math, int asses_phisic)
 {
-	struct Node* head;
-	struct Node* tail;
+	struct Student* list = malloc(sizeof(struct Student));
+	list->name = name;
+	list->surname = surname;
+	list->gender = gender;
+	list->group = group;
+	list->age = age;
+	list->asses_chemistry = asses_chemistry;
+	list->asses_math = asses_math;
+	list->asses_phisic = asses_phisic;
+	list->next = NULL;
+	return list;
+}
+
+
+struct ListStudents 
+{
+	struct Student* head;
+	struct Student* tail;
 	int size;
 
-	void (*append)(struct Student* list, const char name[20],
-		const char surname[20], const char gender[1],
-		int age, const char group[7], int mark_math, int mark_physics, int mark_chemistry);
-	int (*get)(struct Student*, int index);
+	void (*append)(struct ListStudents*, struct Student*);
+	int (*get)(struct ListStudents*, int);
 };
 
-void l_s_append(struct Student*, const char name[20], const char surname[20], const char gender[1], int age, 
-	const char group[7],
-	int mark_math, int mark_physics, int mark_chemustry);
-int l_s_get(struct Student* list, int index);
+void l_append(struct ListStudents*, struct Student*);
+int l_get(struct ListStudents*, int);
 
 
-void l_s_append(struct Student* list, const char name[20], const char surname[20], const char gender[1], int age, const char group[7],
-	int mark_math, int mark_physics, int mark_chemustry)
+void l_append(struct ListStudents* list, struct Student* stud)
 {
-	struct Node* new_node = malloc(sizeof(struct Node));
-	strcpy(new_node->name, name);
-	strcpy(new_node->surname, surname);
-	strcpy(new_node->gender, gender);
-	strcpy(new_node->group, group);
-	new_node->age = age;
-	new_node->mark_math = mark_math;
-	new_node->mark_chemistry = mark_chemustry;
-	new_node->mark_physics = mark_physics;
-	new_node->next = NULL;
 	if (list->size == 0)
 	{
-		list->head = new_node;
+		list->head = stud;
 		list->tail = list->head;
 	}
-	else
-	{
-		list->tail->next = new_node;
-		list->tail = new_node;
+	else {
+		list->tail->next = stud;
+		list->tail = stud;
 	}
 	list->size++;
 }
 
 
-struct Student* l_init()
+int l_get(struct ListStudents* list, int index)
 {
-	struct Student* list = malloc(sizeof(struct Student));
-	list->size = 0;
-	list->head = NULL;
-	list->tail = NULL;
-	list->append = l_s_append;
-	list->get = l_s_get;
-	return list;
-}
-
-
-int l_s_get(struct Student* list, int index)
-{
-	if (index >= 0 && index < list->size)
+	if (index >=0 && index < list->size)
 	{
-		struct Node* tmp = list->head;
+		struct Student* tmp = list->head;
 		for (int i = 0; i < list->size; i++)
 		{
 			if (i == index)
 			{
-				if (tmp->mark_chemistry == 2 || tmp->mark_math == 2 || tmp->mark_physics == 2 || tmp->mark_chemistry == 3 || tmp->mark_math == 3 || tmp->mark_physics == 3)
+				if (tmp->asses_chemistry == 2 || tmp->asses_math == 2 || tmp->asses_phisic == 2 || tmp->asses_chemistry == 3 || tmp->asses_math == 3 || tmp->asses_phisic == 3)
 				{
-					printf("%s %s\n", tmp->surname, tmp->name);
+					printf("%s %s.", tmp->surname, tmp->name);
 					return 0;
 				}
-				else
-					return 0;
 			}
 			else
 			{
@@ -98,19 +83,29 @@ int l_s_get(struct Student* list, int index)
 			}
 		}
 	}
-	printf("Нет такого индекса");
+	printf("Нет такого индекса.");
 	return -1;
+}
+
+
+struct ListStudents* l_init()
+{
+	struct ListStudents* list = malloc(sizeof(struct ListStudents));
+	list->append = l_append;
+	list->get = l_get;
+	list->head = NULL;
+	list->tail = NULL;
+	list->size = 0;
+	return list;
 }
 
 
 int main()
 {
-	struct Student* student_data = l_init();
 	setlocale(LC_ALL, "Rus");
-
-	student_data->append(student_data, "Поликанов", "Никита", "м", 17, "ИСП-205", 3, 2, 4);
-	student_data->append(student_data, "Грешков", "Виктор", "м", 17, "ИСП-235", 5, 5, 2);
-	for (int i = 0; i < student_data->size; i++)
-		student_data->get(student_data, i);
+	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 4, 2);
+	struct ListStudents* student_list = l_init();
+	student_list->append(student_list, student);
+	printf("%s", student_list->get(student_list, 0));
 	return 0;
 }
