@@ -104,8 +104,10 @@ int main()
 {
 	setlocale(LC_ALL, "Rus");
 	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 4, 2);
+	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 4, 2);
 	struct ListStudents* student_list = l_init();
 	student_list->append(student_list, student);
-	printf("%s", student_list->get(student_list, 0));
+	student_list->append(student_list, student1);
+	printf("%s", student_list->get(student_list, 1));
 	return 0;
 }

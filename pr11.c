@@ -1,44 +1,141 @@
-#include <stdio.h>
-#include <locale.h>
 #include <malloc.h>
+#include <string.h>
+#include <locale.h>
+#include <stdio.h>
 
 
 struct Student
 {
-	char name[20];
-	char surname[20];
-	char gender[1];
+	char *name;
+	char *surname;
+	char *group;
+	char *gender;
 	int age;
-	char group[7];
 	int mark_math;
-	int mark_physics;
+	int mark_phisic;
 	int mark_chemistry;
-	struct Student* next;
+	int count;
+	struct Student* left;
+	struct Student* right;
+
+	void (*add_node)(struct Student*, struct Student*);
+	void (*print)(struct Student*);
+	void (*get)(struct Student*, char*);
+	void (*clear)(struct Student*);
+
 };
 
-struct List 
+
+void tree_add_node(struct Student*, struct Student*);
+void tree_print(struct Student*);
+void tree_get(struct Student*, char*);
+void tree_clear(struct Student*);
+
+
+struct Student* s_init(char* name, char* surname, char* gender, char* group, int age, int mark_math,
+int mark_chemistry, int mark_phisic)
 {
-	struct Student* head;
-	struct Student* tail;
-	int size;
-
-	void (*append)(struct List*, struct Student* );
-	int (*get)(struct List*, int );
-};
-
-
-void l_s_append(struct Student*, char name[20],char surname[20],char gender[1],int age,char group[7],
-                int mark_math, int mark_physics, int mark_chemistry);
-int l_s_get(struct List*, int);
-
-
-void l_s_append(struct Student*, char name[20],char surname[20],char gender[1],int age,char group[7],
-                int mark_math, int mark_physics, int mark_chemistry)
-{
-    
+	struct Student* result = malloc(sizeof(struct Student));
+	result->name = name;
+	result->surname = surname;
+	result->gender = gender;
+	result->group = group;
+	result->age = age;
+	result->mark_chemistry = mark_chemistry;
+	result->mark_math = mark_math;
+	result->mark_phisic = mark_phisic;
+	result->count=1;
+	result->left = NULL;
+	result->right = NULL;
+	result->print = tree_print;
+	result->add_node = tree_add_node;
+	result->get = tree_get;
+	result->clear = tree_clear;
+	return result;
 }
-void main()
-{
-    setlocale(LC_ALL, "Rus");
 
+
+void tree_add_node(struct Student* tree, struct Student* stud)
+{
+	if (strcmp(tree->surname, stud->surname)==0)
+	{
+		tree->count++;
+		return;
+	}
+	if (strcmp(tree->surname, stud->surname) < 0)
+	{
+		if (tree->left == NULL)
+			tree->left = s_init(stud->name, stud->surname, stud->gender, 
+								stud->group, stud->age, stud->mark_math, 
+								stud->mark_chemistry, stud->mark_phisic);
+		tree_add_node(tree->left, stud);
+	}
+	if (strcmp(tree->surname, stud->surname) > 0)
+	{
+		if (tree->right == NULL)
+			tree->right = s_init(stud->name, stud->surname, stud->gender, 
+								 stud->group, stud->age, stud->mark_math, 
+								 stud->mark_chemistry, stud->mark_phisic);
+		tree_add_node(tree->right, stud);
+	}
+}
+
+
+void tree_print(struct Student* tree)
+{
+	if (tree == NULL)
+	{
+		return;
+	}
+	tree_print(tree->left);
+	printf("%s %s.\n", tree->surname, tree->name);
+	tree_print(tree->right);
+}
+
+
+void tree_get(struct Student* tree, char* surname)
+{
+	if (tree == NULL)
+		return;
+	if (strcmp(tree->surname, surname) == 0)
+	{
+		if (tree->count == 0)
+			printf("Элемент не найден");
+		if (tree->mark_chemistry == 2 || tree->mark_math == 2 || tree->mark_phisic == 2 ||
+			tree->mark_chemistry == 3 || tree->mark_math == 3 || tree->mark_phisic == 3)
+		{
+			tree->count--;
+			printf("%s %s", tree->surname, tree->name);
+			return;
+		}
+	}
+	if (strcmp(tree->surname, surname) < 0)
+	{
+		tree_get(tree->left, surname);
+	}
+	if (strcmp(tree->surname, surname) > 0)
+	{
+		tree_get(tree->right, surname);
+	}
+}
+
+
+void tree_clear(struct Student* tree){
+    if(tree == NULL)
+        return;
+    tree_clear(tree->left);
+    tree_clear(tree->right);
+    free(tree);
+}
+
+int main()
+{
+	setlocale(LC_ALL, "Rus");
+	struct Student* root = s_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 2, 5);
+	root->add_node(root, s_init("Виктор", "Степанович", "м", "ИСП-205", 17, 3, 4, 5));
+	printf("Все дерево:\n");
+	root->print(root);
+	printf("Результат:\n");
+	root->get(root, "Поликанов");
+	return 0;
 }
