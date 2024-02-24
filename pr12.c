@@ -39,43 +39,60 @@ struct ListStudents
 	struct Student* tail;
 	int size;
 
-	void (*append)(struct ListStudents*, struct Student*);
-	int (*get)(struct ListStudents*, int);
+	void* (*append)(void*);
+	int* (*get)(void*);
 };
 
-void l_append(struct ListStudents*, struct Student*);
-int l_get(struct ListStudents*, int);
-
-
-void l_append(struct ListStudents* list, struct Student* stud)
+struct Arguments
 {
-	if (list->size == 0)
+    struct Student* stud;
+    struct ListStudents* list;
+};
+struct ArgumentForGet
+{
+    struct ListStudents* list;
+    int index;
+};
+
+void* l_append(void*);
+int* l_get(void*);
+
+
+void* l_append(void* arg)
+{   
+    struct Arguments* _args = arg;
+	if (_args->list->size == 0)
 	{
-		list->head = stud;
-		list->tail = list->head;
+		_args->list->head = _args->stud;
+		_args->list->tail = _args->list->head;
 	}
 	else {
-		list->tail->next = stud;
-		list->tail = stud;
+		_args->list->tail->next = _args->stud;
+		_args->list->tail = _args->stud;
 	}
-	list->size++;
+	_args->list->size++;
 }
 
 
-int l_get(struct ListStudents* list, int index)
+int* l_get(void* arg)
 {
-	if (index >=0 && index < list->size)
+    struct ArgumentForGet* _args = arg;
+	if (_args->index >=0 && _args->index < _args->list->size)
 	{
-		struct Student* tmp = list->head;
-		for (int i = 0; i < list->size; i++)
+		struct Student* tmp = _args->list->head;
+		for (int i = 0; i < _args->list->size; i++)
 		{
-			if (i == index)
+			if (i == _args->index)
 			{
 				if (tmp->asses_chemistry == 2 || tmp->asses_math == 2 || tmp->asses_phisic == 2 || tmp->asses_chemistry == 3 || tmp->asses_math == 3 || tmp->asses_phisic == 3)
 				{
 					printf("%s %s.", tmp->surname, tmp->name);
 					return 0;
 				}
+                else    
+                {
+                    return 0;
+                }
 			}
 			else
 			{
@@ -84,7 +101,7 @@ int l_get(struct ListStudents* list, int index)
 		}
 	}
 	printf("Нет такого индекса.");
-	return -1;
+	return 0;
 }
 
 
@@ -103,11 +120,18 @@ struct ListStudents* l_init()
 int main()
 {
 	setlocale(LC_ALL, "Rus");
-	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 4, 2);
-	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 4, 2);
+	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 2, 5);
+	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 3, 5);
 	struct ListStudents* student_list = l_init();
-	student_list->append(student_list, student);
-	student_list->append(student_list, student1);
-	student_list->get(student_list, 1);
+
+    struct Arguments args = {student, student_list};
+    struct Arguments args2 = {student1, student_list};
+	student_list->append(&args);
+    student_list->append(&args2);
+    for (int i = 0; i < student_list->size; i++)
+    {
+        struct ArgumentForGet args3 = {student_list, i};
+	    student_list->get(&args3);
+    }
 	return 0;
 }
