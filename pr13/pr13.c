@@ -1,25 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include "liststudent.h"
+#include "student.h"
+#include <malloc.h>
 #include <locale.h>
-
 
 void* l_append(void*, void*);
 int l_get(void*, int);
 
-struct Student
-{
-    char* name;
-    char* surname;
-    char* gender;
-    char* group;
-    int age;
-    int asses_chemistry;
-    int asses_math;
-    int asses_phisic;
-    struct Student* next;
-};
-
-struct Student* st_stud_init(void* args)
+Student* s_init(void* args)
 {
     struct Student* list = malloc(sizeof(struct Student));
     if (!list)
@@ -38,20 +26,22 @@ struct Student* st_stud_init(void* args)
     return list;
 }
 
-struct ListStudents 
+ListStudent* l_init()
 {
-    struct Student* head;
-    struct Student* tail;
-    int size;
+    struct ListStudent* result = malloc(sizeof(struct ListStudent));
+    result->append = l_append;
+    result->get = l_get;
+    result->head = NULL;
+    result->tail = NULL;
+    result->size = 0;
+    return result;
+}
 
-    void* (*append)(void*, void*);
-    int (*get)(void*, int);
-};
 
 void* l_append(void* list, void* stud)
 {
-    struct ListStudents* l = (struct ListStudents*)list;
-    struct Student* s = (struct Student*)stud;
+    ListStudent* l = (ListStudent*)list;
+    Student* s = (Student*)stud;
     if (l->size == 0)
     {
         l->head = s;
@@ -62,15 +52,15 @@ void* l_append(void* list, void* stud)
         l->tail = s;
     }
     l->size++;
-    return NULL;
 }
+
 
 int l_get(void* list, int index)
 {
-    struct ListStudents* l = (struct ListStudents*)list;
+    ListStudent* l = (ListStudent*)list;
     if (index >= 0 && index < l->size)
     {
-        struct Student* tmp = l->head;
+        Student* tmp = l->head;
         for (int i = 0; i < l->size; i++)
         {
             if (i == index)
@@ -92,28 +82,15 @@ int l_get(void* list, int index)
     return -1;
 }
 
-void* l_init()
-{
-    struct ListStudents* list = malloc(sizeof(struct ListStudents));
-    if (!list)
-        return NULL;
-    
-    list->append = l_append;
-    list->get = l_get;
-    list->head = NULL;
-    list->tail = NULL;
-    list->size = 0;
-    return list;
-}
 
 int main()
 {
     setlocale(LC_ALL, "Rus");
-    char* student_args[] = {"Никита", "Поликанов", "м", "ИСП-205", "17", "5", "3", "5"};
+    char* student_args[] = {"Никита", "Поликанов", "м", "ИСП-205", "17", "5", "5s", "5"};
     char* student1_args[] = {"Виктор", "Гнильцов", "м", "ИСП-205", "17", "5", "4", "2"};
-    struct ListStudents* student_list = (struct ListStudents*)l_init();
-    student_list->append(student_list, st_stud_init(student_args));
-    student_list->append(student_list, st_stud_init(student1_args));
+    ListStudent* student_list = l_init();
+    student_list->append(student_list, s_init(student_args));
+    student_list->append(student_list, s_init(student1_args));
     for (int i = 0; i < student_list->size; i++)
 		student_list->get(student_list, i);
     return 0;

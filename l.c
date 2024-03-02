@@ -157,7 +157,7 @@ void pr2(int size)
         }
         arr[j + 1] = key;
     }
-    printf("\nТоп три самых больших числа: ");
+    printf("\nпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: ");
     for (int i = 0; i < 3 && i < size; i++)
     {
         printf("%d ", arr[i]);
@@ -177,8 +177,8 @@ void pr3(int row, int col)
     int countMaxInRow, countMaxInCol;
     countMaxInCol = fMaxCol(dArr, row, col, max);
     countMaxInRow = fMaxRow(dArr, row, col, max);
-    printf("\nКоличество максимумов в строке: %d\n", countMaxInRow);
-    printf("Количество максимумов в колонках: %d", countMaxInCol);
+    printf("\nпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: %d\n", countMaxInRow);
+    printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: %d", countMaxInCol);
     void (*freeArray)(int**, int) = freeDArray;
     freeArray(dArr, row);
 }
@@ -215,19 +215,19 @@ void main()
     const int COL = 10;
     void (*pr_pr2)(int) = pr2; 
     pr_pr2(SIZE);
-    printf("\nПР3\n");
+    printf("\nпїЅпїЅ3\n");
     void (*pr_pr3)(int, int) = pr3; 
     pr_pr3(ROW, COL);
-    printf("\nПР5\n");
+    printf("\nпїЅпїЅ5\n");
     void (*pr_pr5)(int) = pr5; 
     pr_pr5(SIZE);
     double a,b;
-    printf("Введите первое число: ");
+    printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: ");
     scanf("%f", &a);
-    printf("Введите второе число: ");
+    printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: ");
     scanf("%f", &b);
     double (*calc[4])(double, double) = {sum, multiply, divide, substract};
-    printf("Результат");
+    printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
     for (int i = 0; i < 4; i++)
         printf("%f\n", calc[i](a,b));
 }
