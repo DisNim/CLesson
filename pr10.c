@@ -83,8 +83,11 @@ int l_get(struct ListStudents* list, int index)
 			}
 		}
 	}
+	else
+	{
 	printf("Нет такого индекса.");
 	return -1;
+	}
 }
 
 
@@ -103,11 +106,12 @@ struct ListStudents* l_init()
 int main()
 {
 	setlocale(LC_ALL, "Rus");
-	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 4, 2);
-	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 4, 2);
+	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 4, 3);
+	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 4, 5);
 	struct ListStudents* student_list = l_init();
 	student_list->append(student_list, student);
 	student_list->append(student_list, student1);
-	student_list->get(student_list, 1);
+	for (int i = 0; i < student_list->size; i++)
+		student_list->get(student_list, i);
 	return 0;
 }
