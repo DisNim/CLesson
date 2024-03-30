@@ -4,7 +4,7 @@
 
 
 void* l_append(void*, void*);
-int l_get(void*, int);
+int l_get(void*, void*);
 
 struct Student
 {
@@ -45,7 +45,7 @@ struct ListStudents
     int size;
 
     void* (*append)(void*, void*);
-    int (*get)(void*, int);
+    int (*get)(void*, void*);
 };
 
 void* l_append(void* list, void* stud)
@@ -65,15 +65,16 @@ void* l_append(void* list, void* stud)
     return NULL;
 }
 
-int l_get(void* list, int index)
+int l_get(void* list, void* index)
 {
     struct ListStudents* l = (struct ListStudents*)list;
-    if (index >= 0 && index < l->size)
+    int _index =  *(int*)index;
+    if (_index >= 0 && _index < l->size)
     {
         struct Student* tmp = l->head;
         for (int i = 0; i < l->size; i++)
         {
-            if (i == index)
+            if (i == _index)
             {
                 if (tmp->asses_chemistry == 2 || tmp->asses_math == 2 || tmp->asses_phisic == 2 || tmp->asses_chemistry == 3 || tmp->asses_math == 3 || tmp->asses_phisic == 3)
                 {
@@ -109,12 +110,12 @@ void* l_init()
 int main()
 {
     setlocale(LC_ALL, "Rus");
-    char* student_args[] = {"Никита", "Поликанов", "м", "ИСП-205", "17", "5", "3", "5"};
-    char* student1_args[] = {"Виктор", "Гнильцов", "м", "ИСП-205", "17", "5", "4", "2"};
+    char* student_args[] = {"Попов", "Петр", "м", "ИСП-205", "17", "5", "3", "5"};
+    char* student1_args[] = {"Гнельцов", "Виктор", "м", "ИСП-205", "17", "5", "4", "2"};
     struct ListStudents* student_list = (struct ListStudents*)l_init();
     student_list->append(student_list, st_stud_init(student_args));
     student_list->append(student_list, st_stud_init(student1_args));
     for (int i = 0; i < student_list->size; i++)
-		student_list->get(student_list, i);
+		student_list->get(student_list, &i);
     return 0;
 }

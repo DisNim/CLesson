@@ -7,7 +7,7 @@
 #include <string.h>
 
 void* l_append(void*, void*);
-int l_get(void*, int);
+int l_get(void*, void*);
 char* l_get_data(void*, int);
 
 Student* s_init(void* args)
@@ -86,15 +86,16 @@ char* l_get_data(void* list, int index)
 }
 
 
-int l_get(void* list, int index)
+int l_get(void* list, void* index)
 {
     ListStudent* l = (ListStudent*)list;
-    if (index >= 0 && index < l->size)
+    int _index = *(int*)index;
+    if (_index >= 0 && _index < l->size)
     {
         Student* tmp = l->head;
         for (int i = 0; i < l->size; i++)
         {
-            if (i == index)
+            if (i == _index)
             {
                 if (tmp->asses_chemistry == 2 || tmp->asses_math == 2 || tmp->asses_phisic == 2 || tmp->asses_chemistry == 3 || tmp->asses_math == 3 || tmp->asses_phisic == 3)
                 {
@@ -175,9 +176,9 @@ int main()
     ListStudent* student_list = l_init();
     student_list->append(student_list, s_init(student_args));
     student_list->append(student_list, s_init(student1_args));
-    //saveFile("test.txt", student_list);
+    saveFile("test.txt", student_list);
     student_list = loadFile("test.txt");
     for (int i = 0; i < student_list->size; i++)
-		student_list->get(student_list, i);
+		student_list->get(student_list, &i);
     return 0;
 }

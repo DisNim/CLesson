@@ -138,7 +138,7 @@ ListStudent* loadFile(char* path)
 int main()
 {
     setlocale(LC_ALL, "Rus");
-    char* student_args[] = {"Никита", "Поликанов", "м", "ИСП-205", "17", "5", "3", "5"};
+    char* student_args[] = {"Степа", "Иванов", "м", "ИСП-205", "17", "5", "3", "5"};
     char* student1_args[] = {"Виктор", "Гнильцов", "м", "ИСП-205", "17", "5", "4", "2"};
     ListStudent* student_list = l_init();
     student_list->append(student_list, s_init(student_args));

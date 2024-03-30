@@ -9,7 +9,7 @@ typedef struct ListStudent
 	int size;
 
 	void* (*append)(void*, void*);
-	int (*get)(void*, int);
+	int (*get)(void*, void*);
 	char* (*get_data)(void*, int);
 } ListStudent;
 

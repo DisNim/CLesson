@@ -54,7 +54,8 @@ void l_append(struct ListStudents* list, struct Student* stud)
 		list->head = stud;
 		list->tail = list->head;
 	}
-	else {
+	else 
+	{
 		list->tail->next = stud;
 		list->tail = stud;
 	}
@@ -106,8 +107,8 @@ struct ListStudents* l_init()
 int main()
 {
 	setlocale(LC_ALL, "Rus");
-	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 4, 3);
-	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 4, 5);
+	struct Student* student = st_stud_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 5, 0);
+	struct Student* student1 = st_stud_init("Виктор", "Гнильцов", "м", "ИСП-205", 17, 5, 4, 0);
 	struct ListStudents* student_list = l_init();
 	student_list->append(student_list, student);
 	student_list->append(student_list, student1);
