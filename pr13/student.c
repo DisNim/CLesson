@@ -1,20 +1,5 @@
-#ifndef STUDENT_H
-#define STUDENT_H
+#include "student.h"
 #include <malloc.h>
-
-#define Stud(students) init(students);
-typedef struct Student
-{
-    char* name;
-	char* surname;
-	char* gender;
-	char* group;
-	int age;
-	int asses_chemistry;
-	int asses_math;
-	int asses_phisic;
-	struct Student* next;
-} Student;
 
 Student* init(void* args)
 {
@@ -30,5 +15,4 @@ Student* init(void* args)
     list->asses_phisic = atoi(params[7]);
     list->next = NULL;
     return list;
-};
-#endif //STUDENT_H
+}

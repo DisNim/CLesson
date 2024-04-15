@@ -2,74 +2,116 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Student
-{
-    char surname[50];
-    char name[50];
-    char gender;
+struct Student {
     int age;
+    char name[50];
+    char surname[50];
+    char gender[10];
     char group[50];
-    float math_grade;
-    float physics_grade;
-    float chemistry_grade;
+    int mathGrade;
+    int physicGrade;
+    int chemistryGrade;
+    struct Student* next;
 };
 
-struct Derevo
-{
-    struct Student data;
-    struct Derevo* left;
-    struct Derevo* right;
+struct List {
+    struct Student* head;
+    struct Student* tail;
+    int size;
 
-    void (*CreatDerevo)(struct Student student);
-    void (*PrintDerevo)(struct Derevo* root);
-    void (*AddDerevoByChemistry)(struct Derevo* root, struct Student student);
-
+    void (*append)(struct List*, struct Student*);
+    void (*get)(struct List*);
 };
 
-struct Derevo* CreatDerevo(struct Student student) {
-    struct Derevo* newDerevo = (struct Derevo*)malloc(sizeof(struct Derevo));
-    newDerevo->data = student;
-    newDerevo->left = NULL;
-    newDerevo->right = NULL;
-    return newDerevo;
+void l_append(struct List* list, struct Student* student);
+void l_get(struct List*);
+void printList(struct List*);
+
+void l_append(struct List* list, struct Student* student) {
+    if (list->size == 0) {
+        list->head = student;
+        list->tail = list->head;
+    } else {
+        list->tail->next = student;
+        list->tail = student;
+    }
+    list->size++;
 }
 
-struct Derevo* AddDerevoByChemistry(struct Derevo* root, struct Student student) {
-    if (root == NULL) {
-        return CreatDerevo(student);
-    }
+void l_get(struct List* list) {
+    struct Student *current, *prev = NULL, *nextNode;
+    int swapped;
 
-    if (student.chemistry_grade < root->data.chemistry_grade) {
-        root->left = AddDerevoByChemistry(root->left, student);
-    }
-    else {
-        root->right = AddDerevoByChemistry(root->right, student);
-    }
+    if (list->head == NULL)
+        return;
 
-    return root;
+    do {
+        swapped = 0;
+        current = list->head;
+
+        while (current->next != NULL) {
+            nextNode = current->next;
+            if (current->age > nextNode->age) {
+                if (prev != NULL) {
+                    prev->next = nextNode;
+                } else {
+                    list->head = nextNode;
+                }
+                current->next = nextNode->next;
+                nextNode->next = current;
+                prev = nextNode;
+                swapped = 1;
+            } else {
+                prev = current;
+                current = current->next;
+            }
+        }
+        list->tail = prev;
+    } while (swapped);
 }
 
+struct List* init() {
+    struct List* list = malloc(sizeof(struct List));
+    list->append = l_append;
+    list->get = l_get;
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
+    return list;
+}
 
-void PrintDerevo(struct Derevo* root) {
-    if (root != NULL) {
-        PrintDerevo(root->left);
-        printf("%s %s %c %d %s %.1f %.1f %.1f\n", root->data.surname, root->data.name, root->data.gender, root->data.age, root->data.group, root->data.math_grade, root->data.physics_grade, root->data.chemistry_grade);
-        PrintDerevo(root->right);
+struct Student* s_init(int age, const char* name, const char* surname, const char* gender, const char* group, int mathGrade, int physicGrade, int chemistryGrade) {
+    struct Student* student = malloc(sizeof(struct Student));
+    student->next = NULL;
+    student->age = age;
+    strcpy(student->name, name);
+    strcpy(student->surname, surname);
+    strcpy(student->gender, gender);
+    strcpy(student->group, group);
+    student->mathGrade = mathGrade;
+    student->physicGrade = physicGrade;
+    student->chemistryGrade = chemistryGrade;
+    return student;
+}
+
+void printList(struct List* list) {
+    struct Student* current = list->head;
+    while (current != NULL) {
+        if (current->mathGrade != 2 || current->physicGrade != 2 || current->chemistryGrade != 2)
+        {
+             printf("%s %s %s - %d, %d, %d: ", current->surname, current->name, current->group, current->mathGrade, current->physicGrade, current->chemistryGrade);
+             break;
+        }
+        printf("\n");
+        current = current->next;
     }
 }
 
 int main() {
-    struct Student student1 = { "Иванов", "Иван", 'М', 20, "Группа1", 4.5, 4.0, 4.8 };
-    struct Student student2 = { "Петров", "Петр", 'М', 21, "Группа2", 3.8, 4.2, 4.5 };
-    struct Student student3 = { "Сидорова", "Мария", 'Ж', 19, "Группа1", 4.2, 3.9, 4.9 };
-
-    struct Derevo* rootByChemistry = NULL;
-    rootByChemistry = AddDerevoByChemistry(rootByChemistry, student1);
-    rootByChemistry = AddDerevoByChemistry(rootByChemistry, student2);
-    rootByChemistry = AddDerevoByChemistry(rootByChemistry, student3);
-
-    printf("Структура со студентами, отсортированными по оценке по химии:\n");
-    PrintDerevo(rootByChemistry);
-
+    struct List* StudentList = init();
+    StudentList->append(StudentList, s_init(23, "Ivan", "Nikita", "муж", "Artem", 4, 4,4));
+    StudentList->append(StudentList, s_init(14, "Чурка", "Egor", "муж", "Sergey", 2, 2, 2));
+    StudentList->get(StudentList);
+    printList(StudentList);
     return 0;
 }

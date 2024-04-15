@@ -20,7 +20,7 @@ struct Student
 
 	void (*add_node)(struct Student*, struct Student*);
 	void (*print)(struct Student*);
-	void (*get)(struct Student*, char*);
+	void (*get)(struct Student*);
 	void (*clear)(struct Student*);
 
 };
@@ -28,7 +28,7 @@ struct Student
 
 void tree_add_node(struct Student*, struct Student*);
 void tree_print(struct Student*);
-void tree_get(struct Student*, char*);
+void tree_get(struct Student*);
 void tree_clear(struct Student*);
 
 
@@ -87,36 +87,29 @@ void tree_print(struct Student* tree)
 	{
 		return;
 	}
-	tree_print(tree->left);
-	printf("%s %s.\n", tree->surname, tree->name);
 	tree_print(tree->right);
+	printf("%s %s.\n", tree->surname, tree->name);
+	tree_print(tree->left);
 }
 
 
-void tree_get(struct Student* tree, char* surname)
+void tree_get(struct Student* tree)
 {
 	if (tree == NULL)
 		return;
-	if (strcmp(tree->surname, surname) == 0)
-	{
-		if (tree->count == 0)
+	if (tree->count == 0)
 			printf("Элемент не найден");
-		if (tree->mark_chemistry == 2 || tree->mark_math == 2 || tree->mark_phisic == 2 ||
+	if (tree->mark_chemistry == 2 || tree->mark_math == 2 || tree->mark_phisic == 2 ||
 			tree->mark_chemistry == 3 || tree->mark_math == 3 || tree->mark_phisic == 3)
 		{
 			tree->count--;
-			printf("%s %s", tree->surname, tree->name);
-			return;
+			printf("%s %s\n", tree->surname, tree->name);
+			tree_get(tree->left);
 		}
-	}
-	if (strcmp(tree->surname, surname) < 0)
-	{
-		tree_get(tree->left, surname);
-	}
-	if (strcmp(tree->surname, surname) > 0)
-	{
-		tree_get(tree->right, surname);
-	}
+    else 
+    {
+        tree_get(tree->right);
+    }
 }
 
 
@@ -128,14 +121,17 @@ void tree_clear(struct Student* tree){
     free(tree);
 }
 
+
 int main()
 {
 	setlocale(LC_ALL, "Rus");
-	struct Student* root = s_init("Никита", "Поликанов", "м", "ИСП-205", 17, 5, 2, 5);
-	root->add_node(root, s_init("Виктор", "Степанович", "м", "ИСП-205", 17, 3, 4, 5));
+	struct Student* root = s_init("Петр", "Петров", "м", "ИСП-205", 17, 5, 5, 5);
+	root->add_node(root, s_init("Виктор", "Степанович", "м", "ИСП-205", 17, 5, 4, 5));
+	root->add_node(root, s_init("Иван", "Иванов", "м", "ИСП-205", 17, 5, 4, 5));
+	root->add_node(root, s_init("Светлана", "Викторовна", "м", "ИСП-205", 17, 2, 4, 5));
 	printf("Все дерево:\n");
 	root->print(root);
 	printf("Результат:\n");
-	root->get(root, "Поликанов");
+	root->get(root);
 	return 0;
 }

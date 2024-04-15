@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        ".fantomasignore": "ignore",
+        "student.h": "c",
+        "liststudent.h": "c",
+        "stdio.h": "c",
+        "functional": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "stdlib.h": "c",
+        "string": "c"
+    }
+}

@@ -3,8 +3,17 @@
 #include <locale.h>
 
 
-void* l_append(void*, void*);
-int l_get(void*, void*);
+void* l_append(void*);
+int l_get(void*);
+
+
+struct Node
+{
+    struct Student* stud;
+    struct ListStudents* list;
+    int i;
+};
+
 
 struct Student
 {
@@ -44,17 +53,18 @@ struct ListStudents
     struct Student* tail;
     int size;
 
-    void* (*append)(void*, void*);
-    int (*get)(void*, void*);
+    void* (*append)(void*);
+    int (*get)(void*);
 };
 
-void* l_append(void* list, void* stud)
+void* l_append(void* list)
 {
-    struct ListStudents* l = (struct ListStudents*)list;
-    struct Student* s = (struct Student*)stud;
+    struct Node* node = (struct Node*)list;
+    struct Student* s = node->stud;
+    struct ListStudents* l = node->list;
     if (l->size == 0)
     {
-        l->head = s;
+        l->head = s; 
         l->tail = l->head;
     }
     else {
@@ -65,16 +75,18 @@ void* l_append(void* list, void* stud)
     return NULL;
 }
 
-int l_get(void* list, void* index)
+
+int l_get(void* node)
 {
-    struct ListStudents* l = (struct ListStudents*)list;
-    int _index =  *(int*)index;
-    if (_index >= 0 && _index < l->size)
+    struct Node* newNode = (struct Node*)node;
+    int index =  newNode->i;
+    struct ListStudents* l = newNode->list;
+    if (index >= 0 && index < l->size)
     {
         struct Student* tmp = l->head;
         for (int i = 0; i < l->size; i++)
         {
-            if (i == _index)
+            if (i == index)
             {
                 if (tmp->asses_chemistry == 2 || tmp->asses_math == 2 || tmp->asses_phisic == 2 || tmp->asses_chemistry == 3 || tmp->asses_math == 3 || tmp->asses_phisic == 3)
                 {
@@ -110,12 +122,19 @@ void* l_init()
 int main()
 {
     setlocale(LC_ALL, "Rus");
-    char* student_args[] = {"Попов", "Петр", "м", "ИСП-205", "17", "5", "3", "5"};
+    char* student_args[] = {"Попов", "Петр", "м", "ИСП-205", "17", "3", "5", "5"};
     char* student1_args[] = {"Гнельцов", "Виктор", "м", "ИСП-205", "17", "5", "4", "2"};
     struct ListStudents* student_list = (struct ListStudents*)l_init();
-    student_list->append(student_list, st_stud_init(student_args));
-    student_list->append(student_list, st_stud_init(student1_args));
+    struct Node* node = malloc(sizeof(struct Node));
+    node->list = student_list;
+    node->stud = st_stud_init(student_args);
+    student_list->append(node);
+    node->stud = st_stud_init(student1_args);
+    student_list->append(node);
     for (int i = 0; i < student_list->size; i++)
-		student_list->get(student_list, &i);
+    {
+        node->i = i;
+		student_list->get(node);
+    }
     return 0;
 }

@@ -1,7 +1,10 @@
 #ifndef STUDENT_H
 #define STUDENT_H
+#include <malloc.h>
+//#ifdef 
 
-#define Student() s_init();
+#define Stud(students) init(students);
+#define say printf
 typedef struct Student
 {
     char* name;
@@ -15,5 +18,6 @@ typedef struct Student
 	struct Student* next;
 } Student;
 
-struct Student* s_init(void*);
+Student* init(void* args);
+
 #endif //STUDENT_H
