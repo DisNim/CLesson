@@ -39,12 +39,17 @@ void main()
 	void (*executePr5)(int) = pr5;
 	executePr5(SIZE);
 	printf("\n--------------------------------------\n");
-	printf("Введите первое число: ");
+	printf("Р’РІРµРґРёС‚Рµ a: ");
 	scanf("%lf", &a);
-	printf("Введите второе число: ");
+	printf("Р’РІРµРґРёС‚Рµ b: ");
 	scanf("%lf", &b);
-	double(*calc[4])(double, double) = {sum, multiply, divide, substract};
-	printf("Результат:\n");
+	//double(*calc[4])(double, double) = {sum, multiply, divide, substract};
+	double (*calc[4])(double, double) = malloc(8 * sizeof(double (double, double)));
+	calc[0] = sum;
+	calc[1] = multiply;
+	calc[2] = divide;
+	calc[3] = substract;
+	printf("Р РµР·Р»СЊС‚Р°С‚:\n");
 	for (int i = 0; i < 4; i++)
 	{
 
@@ -175,7 +180,7 @@ void pr2(int size)
 	int (*cMax)(int*, int, int) = countMaxs;
 	int max = fMax(arr, size);
 	int count = cMax(arr, size, max);
-	printf("Максимальное значение: %d\n: Количество: %d\n", max, count);
+	printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: %d\n: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: %d\n", max, count);
 	free(arr);
 }
 
@@ -210,7 +215,7 @@ void pr3(int row, int col)
 		}
 	}
 
-	printf("Максимум %d:", max);
+	printf("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ %d:", max);
 	printArray(maxs, posMax);
 	freeDArray(arr, row);
 	free(maxs);

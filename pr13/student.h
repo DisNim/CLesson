@@ -4,7 +4,7 @@
 //#ifdef 
 
 #define Stud(students) init(students);
-#define say printf
+#define say 10;
 typedef struct Student
 {
     char* name;

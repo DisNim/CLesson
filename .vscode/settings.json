@@ -9,6 +9,10 @@
         "string_view": "c",
         "initializer_list": "c",
         "stdlib.h": "c",
-        "string": "c"
+        "string": "c",
+        "typeinfo": "c",
+        "list": "c",
+        "malloc.h": "c",
+        "savestudent.h": "c"
     }
 }

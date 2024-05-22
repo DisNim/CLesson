@@ -8,7 +8,7 @@
 int main() 
 {
 	setlocale(LC_ALL, "Rus");
-	char sentence[] = "˜˜˜ ˜˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜ ˜˜˜˜ ˜˜˜˜! ˜˜˜ ˜˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜ ˜˜˜˜ ˜˜˜˜? ˜˜˜ ˜˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜ 5 ˜˜˜˜.";
+	char sentence[] = "Ğ’ ÑÑ‚Ğ¾Ğ¼ Ğ¿Ñ€ĞµĞ´Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğ¸ Ğ±Ğ¾Ğ»ÑŒÑˆĞµ 5 ÑĞ»Ğ¾Ğ².";
 	int count = 0, wordCount = 0, inWord = 0;
 	for (int i = 0; i < strlen(sentence); i++)
 	{
@@ -25,7 +25,7 @@ int main()
 		}
 		if (sentence[i] == '.' || sentence[i] == '?' || sentence[i] == '!')
 		{
-			if (wordCount > 5) {
+			if (wordCount >= 5) {
 				count++;
 			}
 			wordCount = 0;
@@ -33,6 +33,6 @@ int main()
 		
 	}
 	
-	printf("˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜ ˜˜˜˜ ˜˜˜˜ ˜˜˜˜˜: %d", count);
+	printf("ĞšĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¿Ñ€ĞµĞ´Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğ¹ ÑĞ¾Ğ´ĞµÑ€Ğ¶Ğ°Ñ‰Ğ¸Ğµ Ğ±Ğ¾Ğ»ÑŒÑˆĞµ 5 ÑĞ»Ğ¾Ğ²: %d", count);
 	return 0;
 }

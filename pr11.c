@@ -97,19 +97,19 @@ void tree_get(struct Student* tree)
 {
 	if (tree == NULL)
 		return;
-	if (tree->count == 0)
-			printf("Элемент не найден");
 	if (tree->mark_chemistry == 2 || tree->mark_math == 2 || tree->mark_phisic == 2 ||
 			tree->mark_chemistry == 3 || tree->mark_math == 3 || tree->mark_phisic == 3)
 		{
+		if (tree->count == 0)
+				printf("Элемент не найден");
+		else
+		{
 			tree->count--;
 			printf("%s %s\n", tree->surname, tree->name);
-			tree_get(tree->left);
 		}
-    else 
-    {
-        tree_get(tree->right);
-    }
+	}
+	tree_get(tree->left);
+	tree_get(tree->right);
 }
 
 
@@ -127,7 +127,7 @@ int main()
 	setlocale(LC_ALL, "Rus");
 	struct Student* root = s_init("Петр", "Петров", "м", "ИСП-205", 17, 5, 5, 5);
 	root->add_node(root, s_init("Виктор", "Степанович", "м", "ИСП-205", 17, 5, 4, 5));
-	root->add_node(root, s_init("Иван", "Иванов", "м", "ИСП-205", 17, 5, 4, 5));
+	root->add_node(root, s_init("Иван", "Иванов", "м", "ИСП-205", 17, 5, 4, 3));
 	root->add_node(root, s_init("Светлана", "Викторовна", "м", "ИСП-205", 17, 2, 4, 5));
 	printf("Все дерево:\n");
 	root->print(root);

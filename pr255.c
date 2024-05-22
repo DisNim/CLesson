@@ -4,10 +4,10 @@
 
 struct Student {
     int age;
-    char name[50];
-    char surname[50];
-    char gender[10];
-    char group[50];
+    char* name;
+    char* surname;
+    char* gender;
+    char* group;
     int mathGrade;
     int physicGrade;
     int chemistryGrade;
@@ -19,99 +19,101 @@ struct List {
     struct Student* tail;
     int size;
 
-    void (*append)(struct List*, struct Student*);
-    void (*get)(struct List*);
+    void* (*append)(void*);
+	void* (*print)(void*);
+	void* (*printStudent)(void*);
 };
 
-void l_append(struct List* list, struct Student* student);
-void l_get(struct List*);
-void printList(struct List*);
+struct Node
+{
+	struct List* list;
+	struct Student* stud;
+};
 
-void l_append(struct List* list, struct Student* student) {
-    if (list->size == 0) {
-        list->head = student;
-        list->tail = list->head;
+void* l_append(void*);
+void* l_printList(void*);
+void* l_print(void*);
+
+void* l_append(void* args) {
+	struct Node* node = (struct Node*)args;
+    if (node->list->size == 0) {
+        node->list->head = node->stud;
+        node->list->tail = node->list->head;
     } else {
-        list->tail->next = student;
-        list->tail = student;
+        node->list->tail->next = node->stud;
+        node->list->tail = node->stud;
     }
-    list->size++;
+    node->list->size++;
 }
 
-void l_get(struct List* list) {
-    struct Student *current, *prev = NULL, *nextNode;
-    int swapped;
-
-    if (list->head == NULL)
-        return;
-
-    do {
-        swapped = 0;
-        current = list->head;
-
-        while (current->next != NULL) {
-            nextNode = current->next;
-            if (current->age > nextNode->age) {
-                if (prev != NULL) {
-                    prev->next = nextNode;
-                } else {
-                    list->head = nextNode;
-                }
-                current->next = nextNode->next;
-                nextNode->next = current;
-                prev = nextNode;
-                swapped = 1;
-            } else {
-                prev = current;
-                current = current->next;
-            }
-        }
-        list->tail = prev;
-    } while (swapped);
-}
 
 struct List* init() {
     struct List* list = malloc(sizeof(struct List));
     list->append = l_append;
-    list->get = l_get;
+	list->print = l_print;
+	list->printStudent = l_printList;
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;
     return list;
 }
 
-struct Student* s_init(int age, const char* name, const char* surname, const char* gender, const char* group, int mathGrade, int physicGrade, int chemistryGrade) {
+struct Student* s_init(char** args) {
     struct Student* student = malloc(sizeof(struct Student));
     student->next = NULL;
-    student->age = age;
-    strcpy(student->name, name);
-    strcpy(student->surname, surname);
-    strcpy(student->gender, gender);
-    strcpy(student->group, group);
-    student->mathGrade = mathGrade;
-    student->physicGrade = physicGrade;
-    student->chemistryGrade = chemistryGrade;
+    student->age = atoi(args[2]);
+    student->name = args[1];
+    student->surname = args[0];
+    student->gender = args[3];
+    student->group = args[4];
+    student->mathGrade = atoi(args[5]);
+    student->physicGrade = atoi(args[6]);
+    student->chemistryGrade = atoi(args[7]);
     return student;
 }
 
-void printList(struct List* list) {
-    struct Student* current = list->head;
+void* l_printList(void* args) {
+	struct Node* node = (struct Node*)args;
+    struct Student* current = node->list->head;
     while (current != NULL) {
-        if (current->mathGrade != 2 || current->physicGrade != 2 || current->chemistryGrade != 2)
+        if (current->mathGrade != 2 && current->physicGrade != 2 && current->chemistryGrade != 2)
         {
-             printf("%s %s %s - %d, %d, %d: ", current->surname, current->name, current->group, current->mathGrade, current->physicGrade, current->chemistryGrade);
-             break;
+             printf("%s %s %s - %d, %d, %d\n", current->surname, current->name, current->group, current->mathGrade, current->physicGrade, current->chemistryGrade);
         }
-        printf("\n");
         current = current->next;
     }
 }
 
+void* l_print(void* args)
+{
+	struct Node* node = (struct Node*)args;
+	struct Student* stud = node->list->head;
+	for (int i = 0; i < node->list->size; i++)
+	{
+		printf("%s %s %s %s %d: %d %d %d\n", stud->surname, stud->name, stud->gender, stud->group, stud->age, stud->chemistryGrade, stud->mathGrade, stud->physicGrade);
+		stud = stud->next;
+	}
+}
+
+
 int main() {
     struct List* StudentList = init();
-    StudentList->append(StudentList, s_init(23, "Ivan", "Nikita", "муж", "Artem", 4, 4,4));
-    StudentList->append(StudentList, s_init(14, "Чурка", "Egor", "муж", "Sergey", 2, 2, 2));
-    StudentList->get(StudentList);
-    printList(StudentList);
+    
+	char* student[][8] = {
+		 {"Петров","Иван","12","м","401","2","3","2"},
+        {"Терешков","Иван","12","м","401","5","3","2"},
+        {"Иванов","Иван","12","м","401","3","3","5"},
+        {"Туркменов","Иван","12","м","401","5","3","2"},
+        {"Грешков","Иван","12","м","401","5","3","4"},
+        {"Гнильцов","Иван","12","м","401","5","3","2"}
+	};
+	struct Node* node = malloc(sizeof(struct Node));
+	node->list=StudentList;
+	for (int i = 0; i < sizeof(student)/sizeof(student[0]); i++)
+	{
+		node->stud = s_init(student[i]);
+		StudentList->append(node);
+	}
+	StudentList->printStudent(node);
     return 0;
 }

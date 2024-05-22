@@ -1,70 +1,40 @@
-#include <stdio.h>
 #include "liststudent.h"
 #include "student.h"
-#include <stdlib.h>
+#include "savestudent.h"
+#include <stdio.h>
 #include <malloc.h>
-#include <locale.h>
-#include <string.h>
-
-
-int saveFile(char* path, ListStudent* student_list)
-{
-    FILE* file;
-    file = fopen(path, "w");
-    fwrite(student_list, sizeof(ListStudent), 1, file);
-    fclose(file);
-    return 0;
-}
-
-
-// ListStudent* loadFile(char* path)
-// {
-//     ListStudent* list = l_init();
-//     FILE* file;
-//     file = fopen(path, "r");
-//     if (file == NULL)
-//     {
-//         printf("Файл не существует!\n");
-//         exit(-1);
-//     }
-//     char* str[8];
-//     for (int i = 0; i < 8; i++) {
-//         str[i] = (char *)malloc(100 * sizeof(char));
-//     }
-//     int i = 0;
-//     while (!feof(file))
-//     {
-//         fscanf(file, "%s", str[i]);
-//         i++;
-//         if (i >= 8)
-//         {
-//             list->append(list, Stud(str));
-//             i = 0;
-//         }
-//     }
-//     fclose(file);
-//     return list;
-// }
+#include <stdlib.h>
 
 
 void main()
 {
-    setlocale(LC_ALL, "Rus");
-    char* student_args[] = {"Никита", "Поликанов", "м", "ИСП-205", "17", "5", "5", "5"};
-    char* student1_args[] = {"Виктор", "Гнильцов", "м", "ИСП-205", "17", "5", "4", "2"};
-    ListStudent* student_list = ListInit;
-    Node* newNode = malloc(sizeof(Node));
-    newNode->stud = Stud(student_args);
-    newNode->list = student_list;
-    student_list->append(newNode);
-    newNode->stud = Stud(student1_args);
-    student_list->append(newNode);
+    List* list = list_init;
+    char* students[][8] = {
+        {"Петров","Иван","15","м","401","2","3","2"},
+        {"Терешков","Иван","12","м","401","5","3","2"},
+        {"Иванов","Иван","20","м","405","3","3","5"},
+        {"Туркменов","Иван","14","м","403","5","5","4"},
+        {"Грешков","Иван","15","м","404","5","5","4"},
+        {"Гнильцов","Иван","17","м","402","5","5","5"}
+    };
 
-    saveFile("test.txt", student_list);
-    // ListStudent* new_list = loadFile("test.bin");
-    for (int i = 0; i < student_list->size; i++)
-        {
-            newNode->index = i;
-            student_list->get(newNode);
-        }
+    int size = sizeof(students) / sizeof(students[0]);
+    SaveStudent* save = malloc(sizeof(SaveStudent));
+    save->list = list;
+     for (int i = 0; i < size; i++)
+     {
+         StudentData* student_data = saveStudent(studentInit(students[i]));
+         save->stud = student_data;
+         list->append(save);
+     }
+     save_file("\rtrttest.rtrtxt", save);
+     printf("Весь список студентов\n");
+     list->print(save);
+     printf("\nРезультат\n");
+     list->get(save);
+     List* newList = (List*)load_file("tes34t.txt");
+     save->list = newList;
+     printf("\nРезультат после загрузки\n");
+     newList->get(save);
+     system("pause");
 }
